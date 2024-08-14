@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "a1"
+version = "0.1.0"
+description = ""
+authors = ["Alok Desai <alokdesai2004@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pandas = "^2.2.2"
+numpy = "^2.0.1"
+matplotlib = "^3.9.2"
+seaborn = "^0.13.2"
+
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
