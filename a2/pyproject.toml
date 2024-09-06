@@ -13,6 +13,8 @@ matplotlib = "^3.9.2"
 seaborn = "^0.13.2"
 scikit-learn = "^1.5.1"
 imblearn = "^0.0"
+keras = "^3.5.0"
+ydf = "^0.7.0"
 
 
 [tool.poetry.group.dev.dependencies]
