@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Diabetes Prediction</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				min-height: 100vh;
+				margin: 0;
+				background-color: #f4f4f4;
+			}
+			.container {
+				background: white;
+				padding: 20px;
+				border-radius: 8px;
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+				max-width: 400px;
+				width: 100%;
+			}
+			.container h1 {
+				font-size: 1.5rem;
+				margin-bottom: 1rem;
+			}
+			.container label {
+				display: block;
+				margin: 8px 0 4px;
+			}
+			.container input[type="number"] {
+				width: 100%;
+				padding: 8px;
+				margin-bottom: 1rem;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+			}
+			.container button {
+				width: 100%;
+				padding: 10px;
+				background-color: #28a745;
+				color: white;
+				border: none;
+				border-radius: 4px;
+				cursor: pointer;
+			}
+			.container button:hover {
+				background-color: #218838;
+			}
+			.container .result {
+				margin-top: 1rem;
+				font-size: 1.2rem;
+				color: #333;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h1>Diabetes Prediction</h1>
+			<label for="model">Model</label>
+			<select id="model">
+				<option value="nb">Naive Bayes</option>
+				<option value="pr">Perceptron</option>
+			</select>
+
+			<label for="glucose">Glucose:</label>
+			<input type="number" id="glucose" required />
+
+			<label for="insulin">Insulin:</label>
+			<input type="number" id="insulin" required />
+
+			<label for="bmi">BMI:</label>
+			<input type="number" id="bmi" step="0.1" required />
+
+			<label for="age">Age:</label>
+			<input type="number" id="age" required />
+
+			<button onclick="predictOutcome()">Predict Outcome</button>
+
+			<div class="result" id="result"></div>
+		</div>
+
+		<script>
+			async function predictOutcome() {
+				if (document.getElementById("model").value === "nb") {
+					predictOutcomeNB();
+				} else {
+					predictOutcomePR();
+				}
+			}
+
+			async function predictOutcomeNB() {
+				const glucose = document.getElementById("glucose").value;
+				const insulin = document.getElementById("insulin").value;
+				const bmi = document.getElementById("bmi").value;
+				const age = document.getElementById("age").value;
+
+				const data = {
+					Glucose: parseFloat(glucose),
+					Insulin: parseFloat(insulin),
+					BMI: parseFloat(bmi),
+					Age: parseInt(age),
+				};
+
+				try {
+					const response = await fetch(
+						"http://127.0.0.1:5000/predict_nb",
+						{
+							method: "POST",
+							headers: {
+								"Content-Type": "application/json",
+							},
+							body: JSON.stringify(data),
+						}
+					);
+
+					const result = await response.json();
+					console.log(result);
+					document.getElementById("result").innerText =
+						result.prediction === 1
+							? "Positive for Diabetes"
+							: "Negative for Diabetes";
+				} catch (error) {
+					console.error("Error:", error);
+					document.getElementById("result").innerText =
+						"Error in prediction.";
+				}
+			}
+
+			async function predictOutcomePR() {
+				const glucose = document.getElementById("glucose").value;
+				const insulin = document.getElementById("insulin").value;
+				const bmi = document.getElementById("bmi").value;
+				const age = document.getElementById("age").value;
+
+				const data = {
+					Glucose: parseFloat(glucose),
+					Insulin: parseFloat(insulin),
+					BMI: parseFloat(bmi),
+					Age: parseInt(age),
+				};
+
+				try {
+					const response = await fetch(
+						"http://127.0.0.1:5000/predict_perceptron",
+						{
+							method: "POST",
+							headers: {
+								"Content-Type": "application/json",
+							},
+							body: JSON.stringify(data),
+						}
+					);
+
+					const result = await response.json();
+					console.log(result);
+					document.getElementById("result").innerText =
+						result.prediction === 1
+							? "Positive for Diabetes"
+							: "Negative for Diabetes";
+				} catch (error) {
+					console.error("Error:", error);
+					document.getElementById("result").innerText =
+						"Error in prediction.";
+				}
+			}
+		</script>
+	</body>
+</html>
