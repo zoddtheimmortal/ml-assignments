@@ -63,6 +63,7 @@
 			<select id="model">
 				<option value="nb">Naive Bayes</option>
 				<option value="pr">Perceptron</option>
+				<option value="csm">Custom Perceptron</option>
 			</select>
 
 			<label for="glucose">Glucose:</label>
@@ -86,8 +87,10 @@
 			async function predictOutcome() {
 				if (document.getElementById("model").value === "nb") {
 					predictOutcomeNB();
-				} else {
+				} else if (document.getElementById("model").value === "pr") {
 					predictOutcomePR();
+				} else {
+					predictOutcomeCSM();
 				}
 			}
 
@@ -145,6 +148,44 @@
 				try {
 					const response = await fetch(
 						"http://127.0.0.1:5000/predict_perceptron",
+						{
+							method: "POST",
+							headers: {
+								"Content-Type": "application/json",
+							},
+							body: JSON.stringify(data),
+						}
+					);
+
+					const result = await response.json();
+					console.log(result);
+					document.getElementById("result").innerText =
+						result.prediction === 1
+							? "Positive for Diabetes"
+							: "Negative for Diabetes";
+				} catch (error) {
+					console.error("Error:", error);
+					document.getElementById("result").innerText =
+						"Error in prediction.";
+				}
+			}
+
+			async function predictOutcomeCSM() {
+				const glucose = document.getElementById("glucose").value;
+				const insulin = document.getElementById("insulin").value;
+				const bmi = document.getElementById("bmi").value;
+				const age = document.getElementById("age").value;
+
+				const data = {
+					Glucose: parseFloat(glucose),
+					Insulin: parseFloat(insulin),
+					BMI: parseFloat(bmi),
+					Age: parseInt(age),
+				};
+
+				try {
+					const response = await fetch(
+						"http://127.0.0.1:5000/predict_csm",
 						{
 							method: "POST",
 							headers: {

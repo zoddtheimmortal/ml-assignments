@@ -5,6 +5,7 @@ from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from custom_perceptron import CustomPerceptron
 
 app = Flask(__name__)
 
@@ -26,6 +27,9 @@ with open('naive_bayes_model.pkl', 'rb') as file:
 
 with open('perceptron_model.pkl', 'rb') as file:
     perceptron_model = pickle.load(file)
+
+with open('custom_perceptron_model.pkl', 'rb') as file:
+    custom_perceptron_model = pickle.load(file)
 
 @app.route('/')
 def home():
@@ -63,6 +67,22 @@ def predict_perceptron():
     prediction = perceptron_model.predict(features_scaled)
 
     return jsonify({'model':'perceptron','prediction': int(prediction[0])})
+
+@app.route('/predict_csm', methods=['POST'])
+def perdict_csm():
+    data = request.get_json()
+    features = [
+        data['Glucose'],
+        data['Insulin'],
+        data['BMI'],
+        data['Age']
+    ]
+    features== np.array(features).reshape(1, -1)
+    features_scaled = scaler.transform([features])
+
+    prediction = custom_perceptron_model.predict(features_scaled)
+
+    return jsonify({'model':'custom_perceptron','prediction': int(prediction[0])})
 
 if __name__ == '__main__':
     app.run(debug=True)
