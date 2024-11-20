@@ -45,8 +45,8 @@ def predict_nb():
         data['BMI'],
         data['Age']
     ]
-    features== np.array(features).reshape(1, -1)
-    features_scaled = scaler.transform([features])
+    features = np.array(features).reshape(1, -1)
+    features_scaled = scaler.transform(features)
 
     prediction = naive_bayes_model.predict(features_scaled)
 
@@ -61,8 +61,8 @@ def predict_perceptron():
         data['BMI'],
         data['Age']
     ]
-    features== np.array(features).reshape(1, -1)
-    features_scaled = scaler.transform([features])
+    features= np.array(features).reshape(1, -1)
+    features_scaled = scaler.transform(features)
 
     prediction = perceptron_model.predict(features_scaled)
 
@@ -77,12 +77,12 @@ def perdict_csm():
         data['BMI'],
         data['Age']
     ]
-    features== np.array(features).reshape(1, -1)
-    features_scaled = scaler.transform([features])
+    features= np.array(features).reshape(1, -1)
+    features_scaled = scaler.transform(features)
 
     prediction = custom_perceptron_model.predict(features_scaled)
 
     return jsonify({'model':'custom_perceptron','prediction': int(prediction[0])})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
